@@ -2,17 +2,14 @@ require('dotenv').config({ path: `${__dirname}/../../.env` });
 const { Sequelize } = require('sequelize');
 
 const env = process.env.NODE_ENV || 'development';
-const config = require('./config.js')[env];
+const config = require('./config.js');
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, {
-    host: config.host,
-    dialect: config.dialect,
-    logging: false, // Disabled for cleaner logs
-  });
-}
+const { database, host, username, password, dialect } = config[env];
+
+const sequelize = new Sequelize(database, username, password, {
+  host,
+  dialect,
+  logging: console.log,
+});
 
 module.exports = sequelize;

@@ -1,8 +1,7 @@
 const repository = require('../data/crudRepository');
 const logger = require('../utils/logger');
 
-console.log('repo functions', repository);
-exports.getAll = async (model) => {
+exports.getAll = async (model) => { //one more parameters for associated data
   try {
     return await repository.findAll(model);
   } catch (error) {

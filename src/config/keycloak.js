@@ -9,7 +9,7 @@ exports.keycloak = new Keycloak({
   store: sessionStore, // Use a session store
 }, {
   "realm": process.env.KEYCLOAK_REALM,
-  "auth-server-url": process.env.KEYCLOAK_URL, // Corrected key
+  "auth-server-url": 'https://deepthoughtkeycloak-b7ecewdebaecgsh2.canadacentral-01.azurewebsites.net',//process.env.KEYCLOAK_URL, // Corrected key
   "ssl-required": "external",
   "resource": process.env.KEYCLOAK_CLIENT_ID,
   "credentials": {

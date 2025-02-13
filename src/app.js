@@ -23,7 +23,7 @@ sequelize.sync()
 
 //register routes
 app.use('/api/v1/user', userRouter);
-app.use('/api/v1', crudRouter);
+app.use('/api', crudRouter);
 
 // app.get('/', (req, res) => {
 //   res.send('API is running...');
