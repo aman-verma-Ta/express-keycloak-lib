@@ -47,10 +47,11 @@ exports.update = async (modelName, id, data) => {
       throw new Error(`Model ${modelName} not found`);
     }
 
-    const [updatedRows] = await model.update(data, {
+    const [updatedRows,updatedInstances] = await model.update(data, {
       where: { id: id },
+      returning: true
     });
-    return updatedRows;
+    return updatedInstances[0];
   } catch (error) {
     logger.error(`Error in repository (update):`, error);
     throw error;
