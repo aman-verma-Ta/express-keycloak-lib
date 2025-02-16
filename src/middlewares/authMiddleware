@@ -1,0 +1,28 @@
+const statusCodes = require('../utils/statusCodes');
+
+exports.getLoggedInUserInfo = async (userProfileFromToken) => {
+  try {
+    const userId = userProfileFromToken.sub;
+    const username = userProfileFromToken.preferred_username;
+    const email = userProfileFromToken.email;
+    // ... extract other relevant info
+
+    // Validate extracted data
+    if (!userId || !username || !email) {
+      const error = new Error('Invalid user profile data in token');
+      error.statusCode = statusCodes.BAD_REQUEST;
+      throw error; // Propagate error to controller
+    }
+
+    const user = {
+      id: userId,
+      username: username,
+      email: email,
+      // ...other properties
+    };
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
