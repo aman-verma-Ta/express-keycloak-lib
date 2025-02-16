@@ -17,6 +17,21 @@ app.use(express.json());
 app.use(sessionMiddleware); // Session middleware MUST be before Keycloak
 app.use(keycloak.middleware());
 
+app.use((req, res, next) => {
+    // Assuming you have code to authenticate the request and obtain the access token
+    console.log(req.kauth.grant);
+    const accessToken = req.kauth.grant.access_token.content; // Or however you access the decoded token
+
+    if (accessToken) {
+      req.user = {
+        username: accessToken.preferred_username,
+        //... other user information you might need...
+      };
+    }
+
+    next();
+});
+
 // Initialize database
 sequelize.sync()
 .then(() => logger.info('Database synced'))

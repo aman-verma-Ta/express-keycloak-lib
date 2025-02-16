@@ -1,6 +1,8 @@
 const db = require('../db/models');
 const statusCodes = require('../utils/statusCodes');
-exports.findAll = async (modelName) => {
+
+
+exports.findAll = async (modelName, options = {}) => {
   try {
     const model = db[modelName];
     if (!model) {
@@ -8,7 +10,7 @@ exports.findAll = async (modelName) => {
       error.statusCode = statusCodes.NOT_FOUND;
       throw error;
     }
-    const data = await model.findAll();
+    const data = await model.findAll(options);
     if (!data || data.length === 0) {
       const error = new Error('No records found');
       error.statusCode = statusCodes.NOT_FOUND;
@@ -20,7 +22,7 @@ exports.findAll = async (modelName) => {
   }
 };
 
-exports.findById = async (modelName, id) => {
+exports.findById = async (modelName, id, options = {}) => {
   try {
     const model = db[modelName];
     if (!model) {
@@ -28,7 +30,7 @@ exports.findById = async (modelName, id) => {
       error.statusCode = statusCodes.NOT_FOUND;
       throw error;
     }
-    const data = await model.findByPk(id);
+    const data = await model.findByPk(id, options);
     if (!data) {
       const error = new Error('Record not found');
       error.statusCode = statusCodes.NOT_FOUND;
@@ -40,7 +42,7 @@ exports.findById = async (modelName, id) => {
   }
 };
 
-exports.create = async (modelName, data) => {
+exports.create = async (modelName, data, options = {}) => {
   try {
     const model = db[modelName];
     if (!model) {
@@ -53,14 +55,14 @@ exports.create = async (modelName, data) => {
       error.statusCode = statusCodes.BAD_REQUEST;
       throw error;
     }
-    const createdRecord = await model.create(data);
+    const createdRecord = await model.create(data, options);
     return createdRecord;
   } catch (error) {
     throw error;
   }
 };
 
-exports.update = async (modelName, id, data) => {
+exports.update = async (modelName, id, data, options = {}) => {
   try {
     const model = db[modelName];
     if (!model) {
@@ -76,6 +78,7 @@ exports.update = async (modelName, id, data) => {
     const [updatedRows, updatedInstances] = await model.update(data, {
       where: { id: id },
       returning: true,
+      ...options, // Include any additional options from the service layer
     });
     if (updatedRows === 0) {
       const error = new Error('Record not found');
@@ -88,7 +91,7 @@ exports.update = async (modelName, id, data) => {
   }
 };
 
-exports.deleteRecord = async (modelName, id) => {
+exports.deleteRecord = async (modelName, id, options = {}) => {
   try {
     const model = db[modelName];
     if (!model) {
@@ -98,6 +101,7 @@ exports.deleteRecord = async (modelName, id) => {
     }
     const deletedRows = await model.destroy({
       where: { id: id },
+      ...options, // Include any additional options from the service layer
     });
     if (deletedRows === 0) {
       const error = new Error('Record not found');

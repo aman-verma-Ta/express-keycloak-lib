@@ -50,7 +50,9 @@ exports.getById = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
   try {
-    const data = await service.create(req.params.model, req.body);
+    const data = await service.create(req.params.model, req.body, {
+      context: { user: req.user },
+    });
     res.status(statusCodes.CREATED).json({
       success: true,
       message: 'Record created successfully',
@@ -68,7 +70,12 @@ exports.create = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
-    const data = await service.update(req.params.model, req.params.id, req.body);
+    const data = await service.update(
+      req.params.model,
+      req.params.id,
+      req.body,
+      { context: { user: req.user } }
+    );
     if (!data) {
       const error = new Error('Record not found');
       error.statusCode = statusCodes.NOT_FOUND;
